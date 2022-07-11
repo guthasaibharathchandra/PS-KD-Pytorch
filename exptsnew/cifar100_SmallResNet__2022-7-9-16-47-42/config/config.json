@@ -1,0 +1,26 @@
+{
+  "lr": 0.1,
+  "lr_decay_rate": 0.1,
+  "lr_decay_schedule": [
+    150,
+    225
+  ],
+  "weight_decay": 0.0005,
+  "start_epoch": 0,
+  "end_epoch": 300,
+  "batch_size": 256,
+  "experiments_dir": "./exptsnew",
+  "classifier_type": "SmallResNet",
+  "data_path": "./data",
+  "data_type": "cifar100",
+  "alpha_T": 0.8,
+  "cosine_schedule": true,
+  "saveckp_freq": 100,
+  "workers": 40,
+  "custom_transform": false,
+  "use_teacher_loss": true,
+  "use_student_loss": true,
+  "temperature": 0.1,
+  "kill_similar_gradients": true,
+  "resume": null
+}
