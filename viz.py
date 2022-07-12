@@ -1,5 +1,6 @@
 '''Train PS-KD: learning with PyTorch.'''
 from __future__ import print_function
+from sklearn.manifold import TSNE
 import configparser
 from matplotlib.contour import ContourSet
 
@@ -122,26 +123,29 @@ def main():
     np.save(open(os.path.join(model_dir,'learnable_parameters_similarity.npy'),'wb'),sim_matrices)
    
     print(len(sim_matrices))
+    N = len(sim_matrices)
     
-    coarse_sim_matrices = np.zeros((100,100))
-
-   
-    print(coarse_sim_matrices.shape)
+    fig, ax = plt.subplots(nrows=1, ncols=N, figsize=(8,6))
     
+    maps = []
     def heatMap(sim_matrices):
-        #for i in range(len(sim_matrices)):
-            for x in range(100):
+        for k in range(len(sim_matrices)):
+            coarse_sim_matrices = np.zeros((100,100))
+            for i in range(100):
                 for j in range(100):
-                    coarse_sim_matrices[sparse2coarse(x)[0]*5 + sparse2coarse(x)[1]][sparse2coarse(j)[0]*5 + sparse2coarse(j)[1]]= sim_matrices[2][x][j]
-            #coarse_sim_matrices.append(coarse_sim_matrices)
-            ax = sns.heatmap(coarse_sim_matrices)
-            plt.show()
-            return
-      
-    heatMap(sim_matrices)
+                    i_coarse = sparse2coarse(i)    
+                    j_coarse = sparse2coarse(j)    
+                    if i_coarse[0] == j_coarse[0]:
+                        coarse_sim_matrices[sparse2coarse(i)[0]*5 + sparse2coarse(i)[1],sparse2coarse(j)[0]*5 + sparse2coarse(j)[1]]= sim_matrices[k,i,j]
+            maps.append(coarse_sim_matrices)
+        return maps
+        
+    maps = heatMap(sim_matrices) 
+    for k in range(len(sim_matrices)):
+        sns.heatmap(maps[k],annot=False, fmt=".2f", ax=ax[k])
+    plt.show()
     
-    # ax = sns.heatmap(sim_matrices[2])
-    # plt.show()
+
 
 if __name__ == '__main__':
     main()
